@@ -1,5 +1,6 @@
 import time
 
+import selenium.common.exceptions
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -41,7 +42,11 @@ class Bot:
             print("couldn't find messages")
             return
         message = in_messages[-1]
-        message_elements = message.find_elements_by_tag_name('span')
+        message_elements = message.find_elements_by_css_selector(
+            'span[class="_1VzZY selectable-text copyable-text"]')
         for value in message_elements:
-            if value.get_attribute("class") == "_1Oy25":
+            value.find_elements_by_class_name("span")
+            try:
                 return value.text
+            except selenium.common.exceptions.StaleElementReferenceException:
+                return
